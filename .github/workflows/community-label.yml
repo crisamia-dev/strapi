@@ -27,13 +27,15 @@ jobs:
       pull-requests: write
     steps:
       - name: Verify run context
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          DEFAULT_REF: ${{ github.event.repository.default_branch }}
         run: |
-          if [ "${{ github.event_name }}" != "pull_request_target" ]; then
-            echo "::error::Expected pull_request_target, got ${{ github.event_name }}"
+          if [ "$EVENT_NAME" != "pull_request_target" ]; then
+            echo "::error::Expected pull_request_target, got $EVENT_NAME"
             exit 1
           fi
-          BASE_REF="${{ github.event.pull_request.base.ref }}"
-          DEFAULT_REF="${{ github.event.repository.default_branch }}"
           if [ "$BASE_REF" != "$DEFAULT_REF" ]; then
             echo "::error::Refusing to run when PR targets branch '$BASE_REF' (only default '$DEFAULT_REF' is allowed)."
             exit 1
