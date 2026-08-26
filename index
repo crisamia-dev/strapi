@@ -1,0 +1,67 @@
+'use strict';
+
+/**
+ * "hello-world" plugin — server entry point.
+ *
+ * A minimal, working example of a Strapi plugin's controller, route, and
+ * service, kept in a single file so it's easy to drop in and read end to
+ * end. Place this at:
+ *
+ *   packages/plugins/hello-world/server/index.js
+ *
+ * Once the plugin has a package.json (see notes below) and is registered
+ * in an app's config/plugins config, it exposes:
+ *
+ *   GET /api/hello-world/hello
+ *
+ * which returns a JSON greeting produced by the service.
+ */
+
+module.exports = () => ({
+  /**
+   * Controllers handle the incoming request/response cycle. They should
+   * stay thin and delegate real work to a service.
+   */
+  controllers: {
+    hello: ({ strapi }) => ({
+      async sayHello(ctx) {
+        ctx.body = await strapi.plugin('hello-world').service('hello').getGreeting();
+      },
+    }),
+  },
+
+  /**
+   * Services hold the business logic, separated from the controller so
+   * it can be reused elsewhere (other controllers, lifecycle hooks,
+   * tests) without duplicating it.
+   */
+  services: {
+    hello: () => ({
+      async getGreeting() {
+        return { message: 'Hello from the hello-world plugin!' };
+      },
+    }),
+  },
+
+  /**
+   * Routes map an HTTP verb + path to a controller action. `content-api`
+   * routes are exposed under /api and go through Strapi's normal
+   * permissions system when `auth` isn't disabled.
+   */
+  routes: {
+    'content-api': {
+      type: 'content-api',
+      routes: [
+        {
+          method: 'GET',
+          path: '/hello',
+          handler: 'hello.sayHello',
+          config: {
+            policies: [],
+            auth: false, // flip to true (or remove) once you want it permission-gated
+          },
+        },
+      ],
+    },
+  },
+});
