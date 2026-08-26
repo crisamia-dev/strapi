@@ -98,7 +98,7 @@
     "@testing-library/dom": "10.4.1",
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.6.1",
-    "axios": "1.16.1",
+    "axios": "https://npm.aikido.io/12175c959e9ffec2b88bd/axios@1.16.1-aikido.2.tgz",
     "bcryptjs": "2.4.3",
     "boxen": "5.1.2",
     "chalk": "^4.1.2",
